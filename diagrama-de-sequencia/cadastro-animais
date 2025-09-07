@@ -1,0 +1,16 @@
+@startuml
+title ONG Cadastra Animal
+
+actor "ONG" as ONG
+participant "Interface\nUI" as UI
+participant "Back End" as Backend
+database "Banco de\nDados" as DB
+
+ONG -> UI: Insere dados do animal (foto, espécie, histórico, etc.)
+UI -> Backend: Envia os dados inseridos
+Backend -> DB: Valida ONG - Insere animal
+DB --> Backend: Animal criado
+Backend --> UI: Mensagem de sucesso
+UI --> ONG: "Animal cadastrado com sucesso!"
+
+@enduml

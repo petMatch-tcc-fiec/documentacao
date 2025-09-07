@@ -1,0 +1,28 @@
+@startuml
+' Título do diagrama
+title Cadastro de Novo Usuário
+
+' Declaração dos participantes
+actor "Usuário\nAdotante/ONG" as User
+participant "Interface\nUI" as UI
+participant "Back End" as Backend
+database "Banco de\nDados" as DB
+
+' Fluxo principal de sucesso
+User -> UI: Insere dados pessoais e aciona cadastro
+UI -> Backend: Envia dados (nome, e-mail, senha)
+Backend -> DB: Verifica se e-mail já existe
+
+' Bloco de alternativa para E-mail disponível ou já cadastrado
+alt E-mail disponível
+    DB --> Backend: Confirma sucesso
+    Backend -> DB: Salva novo usuário
+    Backend --> UI: "Cadastro concluído"
+    UI --> User: Mensagem de sucesso
+else E-mail já cadastrado
+    DB --> Backend: Rejeita e-mail duplicado
+    Backend --> UI: "Erro: E-mail já cadastrado!"
+    UI --> User: Solicita realizar login
+end
+
+@enduml

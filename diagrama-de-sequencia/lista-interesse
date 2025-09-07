@@ -1,0 +1,16 @@
+@startuml
+title ONG - Lista Interesse nos Animais
+
+actor "ONG" as ONG
+participant "Interface\nUI" as UI
+participant "Back End" as Backend
+database "Banco de\nDados" as DB
+
+ONG -> UI: Acessa a área da ONG
+UI -> Backend: Envia requisição
+Backend -> DB: Busca animais e filas
+DB --> Backend: Dados são enviados como resposta
+Backend --> UI: Lista de animais e interessados
+UI --> ONG: Exibe tabelas com as filas
+
+@enduml
