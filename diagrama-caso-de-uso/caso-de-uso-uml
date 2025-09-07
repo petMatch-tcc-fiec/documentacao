@@ -1,0 +1,42 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+
+actor "Usuário Adotante" as Adotante
+actor "ONG" as ONG
+
+rectangle "Sistema PetMatch" {
+    usecase "Cadastrar Adotante" as UC1
+    usecase "Cadastrar ONG" as UC2
+    usecase "Fazer Login" as UC3
+    usecase "Cadastrar Animal" as UC4
+    usecase "Visualizar Feed de Eventos" as UC5
+    usecase "Manifestar Interesse em Animal" as UC6
+    usecase "Visualizar Lista de Interesse" as UC7
+    usecase "Aprovar Adoção" as UC8
+    usecase "Enviar Notificação" as UC9
+}
+
+' Relações dos atores com os casos de uso
+Adotante --> UC1
+Adotante --> UC3
+Adotante --> UC5
+Adotante --> UC6
+
+ONG --> UC2
+ONG --> UC3
+ONG --> UC4
+ONG --> UC7
+ONG --> UC8
+
+' Relações de dependência entre casos de uso
+UC4 .> UC3 : <<include>>
+UC6 .> UC3 : <<include>>
+UC7 .> UC3 : <<include>>
+UC8 .> UC3 : <<include>>
+
+' Ação que dispara um processo
+UC6 .> UC9 : <<include>>
+UC8 .> UC9 : <<include>>
+
+@enduml
