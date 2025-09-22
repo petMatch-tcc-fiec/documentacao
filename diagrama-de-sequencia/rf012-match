@@ -1,0 +1,15 @@
+@startuml
+title [RF012] - Manifestar Interesse em Animal (Match)
+
+actor Adotante as "Usuário Adotante"
+participant UI as "Interface UI"
+participant Backend as "Back End"
+database DB as "Banco de Dados"
+
+Adotante ->> UI: Clica no botão "Tenho interesse"
+UI ->> Backend: POST /api/interesses
+Backend ->> DB: INSERT INTO interesses (usuario_id, animal_id)
+DB -->> Backend: Confirmação
+Backend -->> UI: Interesse registrado
+UI -->> Adotante: Mensagem de sucesso
+@enduml
