@@ -1,0 +1,15 @@
+@startuml
+title [RF004] - Login Admin ONG
+
+actor ONG as "Admin ONG"
+participant UI as "Interface UI"
+participant Backend as "Back End"
+database DB as "Banco de Dados"
+
+ONG ->> UI: Digita login e senha
+UI ->> Backend: POST /api/login
+Backend ->> DB: SELECT * FROM ongs WHERE email=...
+DB -->> Backend: Retorna credenciais
+Backend -->> UI: Autenticação válida
+UI -->> ONG: Acesso concedido
+@enduml
