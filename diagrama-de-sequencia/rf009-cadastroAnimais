@@ -1,0 +1,15 @@
+@startuml
+title [RF009] - Cadastro de Animais
+
+actor ONG as "Admin ONG"
+participant UI as "Interface UI"
+participant Backend as "Back End"
+database DB as "Banco de Dados"
+
+ONG ->> UI: Preenche dados do animal
+UI ->> Backend: POST /api/animais
+Backend ->> DB: INSERT INTO animais (...)
+DB -->> Backend: Confirmação
+Backend -->> UI: Cadastro concluído
+UI -->> ONG: Sucesso
+@enduml
