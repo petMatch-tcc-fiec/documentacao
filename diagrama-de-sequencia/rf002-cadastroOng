@@ -1,0 +1,16 @@
+@startuml
+title [RF002] - Cadastro de Usuário ONG
+
+actor ONG as "Admin ONG"
+participant UI as "Interface UI"
+participant Backend as "Back End"
+database DB as "Banco de Dados"
+
+ONG ->> UI: Acessa tela de cadastro da ONG
+ONG ->> UI: Preenche dados da organização
+UI ->> Backend: POST /api/ongs
+Backend ->> DB: INSERT INTO ongs (...)
+DB -->> Backend: Confirmação
+Backend -->> UI: Cadastro realizado
+UI -->> ONG: Exibe mensagem de sucesso
+@enduml
