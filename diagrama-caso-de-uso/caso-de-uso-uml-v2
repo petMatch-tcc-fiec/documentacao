@@ -1,0 +1,67 @@
+@startuml
+left to right direction
+actor "Usuário Adotante" as Adotante
+actor "Admin ONG" as ONG
+actor "Admin Global" as AdminGlobal
+
+rectangle "Sistema de Adoção" {
+  
+  (Cadastro de usuário adotante) as RF001
+  (Cadastro de usuário ONG) as RF002
+  (Efetuar login adotante) as RF003
+  (Efetuar login ONG) as RF004
+  (Recuperar senha) as RF005
+  (Alterar senha) as RF006
+  (Perfil personalizado adotante) as RF007
+  (Upload fotos residência) as RF022
+  (Perfil personalizado ONG) as RF008
+  
+  (Cadastro de animais) as RF009
+  (Upload fotos animais) as RF023
+  (Editar/Excluir animais) as RF010
+  (Busca e filtros avançados) as RF011
+  (Manifestar interesse em animal) as RF012
+  (Lista de espera de adotantes) as RF013
+  (Aprovar/Reprovar adoção) as RF014
+  (Marcar animal como adotado) as RF015
+  
+  (Postar evento) as RF016
+  (Editar/Excluir evento) as RF017
+
+  (Receber alertas por e-mail/SMS - adotante) as RF018
+  (Receber alertas por e-mail/SMS - ONG) as RF019
+  
+  (Validar cadastro ONG) as RF020
+  (Relatórios e estatísticas) as RF021
+}
+
+Adotante --> RF001
+ONG --> RF002
+Adotante --> RF003
+ONG --> RF004
+Adotante --> RF005
+ONG --> RF005
+Adotante --> RF006
+ONG --> RF006
+Adotante --> RF007
+Adotante --> RF022
+ONG --> RF008
+
+ONG --> RF009
+ONG --> RF023
+ONG --> RF010
+Adotante --> RF011
+Adotante --> RF012
+ONG --> RF013
+ONG --> RF014
+ONG --> RF015
+
+ONG --> RF016
+ONG --> RF017
+
+Adotante --> RF018
+ONG --> RF019
+
+AdminGlobal --> RF020
+ONG --> RF021
+@enduml
