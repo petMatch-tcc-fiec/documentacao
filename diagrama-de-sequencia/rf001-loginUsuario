@@ -1,0 +1,16 @@
+@startuml
+title [RF001] - Cadastro de Usuário Adotante
+
+actor Adotante as "Usuário Adotante"
+participant UI as "Interface UI"
+participant Backend as "Back End"
+database DB as "Banco de Dados"
+
+Adotante ->> UI: Acessa tela de cadastro
+Adotante ->> UI: Preenche dados pessoais
+UI ->> Backend: POST /api/adotantes
+Backend ->> DB: INSERT INTO adotantes (...)
+DB -->> Backend: Confirmação
+Backend -->> UI: Cadastro realizado
+UI -->> Adotante: Exibe mensagem de sucesso
+@enduml
