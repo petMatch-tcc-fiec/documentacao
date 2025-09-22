@@ -1,0 +1,20 @@
+@startuml
+title [RF005] - Recuperar Senha
+
+actor User as "Usuário/ONG"
+participant UI as "Interface UI"
+participant Backend as "Back End"
+database DB as "Banco de Dados"
+
+User ->> UI: Solicita recuperação de senha
+UI ->> Backend: POST /api/recovery
+Backend ->> DB: SELECT * FROM usuarios WHERE email=...
+DB -->> Backend: Usuário encontrado
+Backend -->> User: Envia link/código de redefinição
+User ->> UI: Define nova senha
+UI ->> Backend: PUT /api/usuarios/senha
+Backend ->> DB: UPDATE usuarios SET senha=...
+DB -->> Backend: Confirmação
+Backend -->> UI: Senha alterada
+UI -->> User: Confirmação exibida
+@enduml
