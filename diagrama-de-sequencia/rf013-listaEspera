@@ -1,0 +1,15 @@
+@startuml
+title [RF013] - Lista de Espera de Adotantes
+
+actor ONG as "Admin ONG"
+participant UI as "Interface UI"
+participant Backend as "Back End"
+database DB as "Banco de Dados"
+
+ONG ->> UI: Solicita lista de interessados
+UI ->> Backend: GET /api/animais/{id}/interesses
+Backend ->> DB: SELECT usuarios FROM interesses WHERE animal_id=...
+DB -->> Backend: Lista de interessados
+Backend -->> UI: Retorna lista
+UI -->> ONG: Exibe lista
+@enduml
