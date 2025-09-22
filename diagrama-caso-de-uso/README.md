@@ -35,4 +35,4 @@ O diagrama foi criado usando a linguagem **PlantUML**. Para visualizar o diagram
 
 ---
 
-![Diagrama de Casos de Uso do Sistema PetMatch](diagra-caso-de-uso.png)
+![Diagrama de Casos de Uso do Sistema PetMatch](diagra-caso-de-uso-v2.png)
