@@ -1,0 +1,45 @@
+@startuml
+title Admin Global valida cadastro da ONG
+
+actor Admin as "Admin Global"
+participant UI as "Interface UI"
+participant Backend as "Back End"
+database DB as "Banco de Dados"
+actor ONG as "ONG"
+
+Admin ->> UI: Acessa lista de ONGs pendentes
+activate UI
+UI ->> Backend: GET /api/ongs/pendentes
+activate Backend
+Backend ->> DB: SELECT * FROM ongs WHERE status = 'pendente'
+activate DB
+DB -->> Backend: Retorna lista de ONGs pendentes
+deactivate DB
+Backend -->> UI: Lista carregada
+deactivate Backend
+UI -->> Admin: Exibe ONGs aguardando validação
+
+Admin ->> UI: Seleciona ONG e define validação (aprovar/reprovar)
+UI ->> Backend: PUT /api/ongs/{id}/status
+activate Backend
+Backend ->> DB: UPDATE ongs SET status = 'aprovada' ou 'reprovada'
+activate DB
+
+alt ONG aprovada
+    DB -->> Backend: Confirmação
+    deactivate DB
+    Backend -->> UI: 200 OK - "ONG aprovada com sucesso!"
+    deactivate Backend
+    UI -->> Admin: Exibe mensagem de aprovação
+    deactivate UI
+    Backend -->> ONG: Notificação - "Parabéns! Seu cadastro foi aprovado 🎉"
+else ONG reprovada
+    DB -->> Backend: Confirmação
+    deactivate DB
+    Backend -->> UI: 200 OK - "ONG reprovada."
+    deactivate Backend
+    UI -->> Admin: Exibe mensagem de reprovação
+    deactivate UI
+    Backend -->> ONG: Notificação - "Seu cadastro não pôde ser aprovado. Revise seus dados e tente novamente."
+end
+@enduml
