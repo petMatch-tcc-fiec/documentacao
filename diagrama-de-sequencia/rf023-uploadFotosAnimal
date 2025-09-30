@@ -1,0 +1,31 @@
+@startuml
+title ONG - Upload de Fotos do Animal
+
+actor "ONG" as ONG
+participant UI as "Interface UI"
+participant Backend as "Back End"
+participant Storage as "Serviço de Armazenamento"
+
+ONG ->> UI: Seleciona foto(s) do animal
+activate UI
+UI ->> Backend: POST /api/animais/{id}/uploadFoto (arquivo)
+activate Backend
+Backend ->> Storage: Salva foto(s) no repositório (S3, Cloud, File Server)
+activate Storage
+
+alt Upload bem-sucedido
+    Storage -->> Backend: Confirmação de armazenamento (URL(s) da imagem)
+    deactivate Storage
+    Backend -->> UI: 200 OK - "Foto(s) enviada(s) com sucesso"
+    deactivate Backend
+    UI -->> ONG: Exibe mensagem amigável e atualiza galeria do animal
+    deactivate UI
+else Falha no upload
+    Storage -->> Backend: Erro ao armazenar arquivo(s)
+    deactivate Storage
+    Backend -->> UI: 500 Internal Server Error - "Erro ao enviar a foto"
+    deactivate Backend
+    UI -->> ONG: Mensagem amigável "Não foi possível enviar a foto. Tente novamente."
+    deactivate UI
+end
+@enduml
