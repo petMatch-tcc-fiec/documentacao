@@ -1,0 +1,26 @@
+@startuml
+title ONG altera status do animal
+
+actor ONG as "ONG"
+participant UI as "Interface UI"
+participant Backend as "Back End"
+database DB as "Banco de Dados"
+
+ONG ->> UI: Seleciona animal e novo status (adotado, devolvido, disponível)
+activate UI
+UI ->> Backend: PUT /api/animais/{id}/status
+activate Backend
+Backend ->> DB: UPDATE animais SET status = ...
+activate DB
+
+alt Status atualizado com sucesso
+    DB -->> Backend: Confirma alteração
+    deactivate DB
+    Backend -->> UI: 200 OK - "Status do animal atualizado com sucesso!"
+    deactivate Backend
+    UI -->> ONG: Exibe mensagem e atualiza lista de animais
+    deactivate UI
+else Erro na atualização
+    DB -->> Backend: Falha ao atualizar registro
+    deactivate DB
+    Backend -->> UI: 500 Internal Server Error - "Erro ao atualizar status"
