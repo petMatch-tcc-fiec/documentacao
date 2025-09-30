@@ -1,0 +1,32 @@
+@startuml
+title ONG - Edição de Ficha Médica do Animal
+
+actor "ONG" as ONG
+participant UI as "Interface UI"
+participant Backend as "Back End"
+database DB as "Banco de Dados"
+
+ONG ->> UI: Acessa a ficha médica do animal
+activate UI
+ONG ->> UI: Altera dados (vacinas, doenças, castrado)
+UI ->> Backend: Envia dados atualizados da ficha médica
+activate Backend
+Backend ->> DB: UPDATE ficha_medica SET vacinas = ..., doenças = ..., castrado = ... WHERE id_animal = ...
+activate DB
+
+alt Atualização bem-sucedida
+    DB -->> Backend: Confirmação de atualização
+    deactivate DB
+    Backend -->> UI: 200 OK - "Ficha médica atualizada"
+    deactivate Backend
+    UI -->> ONG: Exibe mensagem "Ficha médica atualizada com sucesso!"
+    deactivate UI
+else Erro na atualização
+    DB -->> Backend: Falha na atualização
+    deactivate DB
+    Backend -->> UI: 500 Internal Server Error - "Erro ao atualizar ficha médica"
+    deactivate Backend
+    UI -->> ONG: Exibe mensagem "Não foi possível atualizar a ficha médica. Tente novamente."
+    deactivate UI
+end
+@enduml
