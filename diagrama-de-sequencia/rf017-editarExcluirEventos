@@ -1,0 +1,58 @@
+@startuml
+title ONG edita ou exclui eventos
+
+actor ONG as "ONG"
+participant UI as "Interface UI"
+participant Backend as "Back End"
+database DB as "Banco de Dados"
+
+ONG ->> UI: Acessa lista de eventos
+activate UI
+
+alt Editar evento
+    ONG ->> UI: Seleciona evento e altera dados (título, data, descrição, local)
+    UI ->> Backend: PUT /api/eventos/{id}
+    activate Backend
+    Backend ->> DB: UPDATE eventos SET ... WHERE id = ...
+    activate DB
+
+    alt Edição bem-sucedida
+        DB -->> Backend: Alteração confirmada
+        deactivate DB
+        Backend -->> UI: 200 OK - "Evento atualizado com sucesso!"
+        deactivate Backend
+        UI -->> ONG: Exibe mensagem e atualiza lista de eventos
+        deactivate UI
+    else Falha na edição
+        DB -->> Backend: Erro ao atualizar
+        deactivate DB
+        Backend -->> UI: 500 Internal Server Error - "Erro ao atualizar evento"
+        deactivate Backend
+        UI -->> ONG: Mensagem amigável "Não foi possível atualizar o evento. Tente novamente."
+        deactivate UI
+    end
+
+else Excluir evento
+    ONG ->> UI: Seleciona evento e confirma exclusão
+    UI ->> Backend: DELETE /api/eventos/{id}
+    activate Backend
+    Backend ->> DB: DELETE FROM eventos WHERE id = ...
+    activate DB
+
+    alt Exclusão bem-sucedida
+        DB -->> Backend: Registro removido
+        deactivate DB
+        Backend -->> UI: 200 OK - "Evento excluído com sucesso!"
+        deactivate Backend
+        UI -->> ONG: Exibe mensagem e remove evento da lista
+        deactivate UI
+    else Falha na exclusão
+        DB -->> Backend: Erro ao excluir
+        deactivate DB
+        Backend -->> UI: 500 Internal Server Error - "Erro ao excluir evento"
+        deactivate Backend
+        UI -->> ONG: Mensagem amigável "Não foi possível excluir o evento. Tente novamente."
+        deactivate UI
+    end
+end
+@enduml
