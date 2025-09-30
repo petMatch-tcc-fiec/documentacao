@@ -1,0 +1,29 @@
+@startuml
+title Notificações e E-mails para Usuário Adotante
+
+actor User as "Usuário Adotante"
+participant UI as "Interface UI"
+participant Backend as "Back End"
+database DB as "Banco de Dados"
+participant Email as "Serviço de E-mail/Push"
+
+' --- Fluxo principal ---
+Backend ->> DB: Verifica eventos pendentes de notificação
+activate DB
+DB -->> Backend: Lista de eventos (adoção, novos pets, eventos ONGs)
+deactivate DB
+
+alt Status da adoção atualizado
+    Backend ->> Email: Enviar e-mail/Push "Sua adoção foi atualizada!"
+    Email -->> User: Notificação recebida
+else Novo pet cadastrado
+    Backend ->> Email: Enviar e-mail/Push "Novo pet disponível para adoção 🐾"
+    Email -->> User: Notificação recebida
+else Evento de ONG cadastrado
+    Backend ->> Email: Enviar e-mail/Push "Participe do evento da ONG neste fim de semana!"
+    Email -->> User: Notificação recebida
+else Falha no envio
+    Backend -->> UI: Log de erro - "Falha ao enviar notificação"
+    UI -->> Admin: Alerta sobre falha de notificação
+end
+@enduml
