@@ -1,0 +1,32 @@
+@startuml
+title ONG - Criação de Ficha Médica do Animal
+
+actor "ONG" as ONG
+participant UI as "Interface UI"
+participant Backend as "Back End"
+database DB as "Banco de Dados"
+
+ONG ->> UI: Acessa área de cadastro de ficha médica
+activate UI
+ONG ->> UI: Preenche dados (vacinas, doenças, castrado)
+UI ->> Backend: Envia dados da ficha médica
+activate Backend
+Backend ->> DB: INSERT INTO ficha_medica (id_animal, vacinas, doenças, castrado) VALUES (...)
+activate DB
+
+alt Cadastro bem-sucedido
+    DB -->> Backend: Confirmação de inserção
+    deactivate DB
+    Backend -->> UI: 200 OK - "Ficha médica cadastrada"
+    deactivate Backend
+    UI -->> ONG: Exibe mensagem "Ficha médica criada com sucesso!"
+    deactivate UI
+else Erro no cadastro
+    DB -->> Backend: Falha na inserção
+    deactivate DB
+    Backend -->> UI: 500 Internal Server Error - "Erro ao cadastrar ficha médica"
+    deactivate Backend
+    UI -->> ONG: Exibe mensagem "Não foi possível cadastrar a ficha médica. Tente novamente."
+    deactivate UI
+end
+@enduml
