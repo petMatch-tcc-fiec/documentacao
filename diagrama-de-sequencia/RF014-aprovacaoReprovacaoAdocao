@@ -1,0 +1,34 @@
+@startuml
+title ONG Aprova/Reprova Usuário
+
+actor ONG as "ONG"
+actor User as "Usuário Adotante"
+participant UI as "Interface UI"
+participant Backend as "Back End"
+database DB as "Banco de Dados"
+
+ONG ->> UI: Clica "Aprovar/Reprovar usuário"
+activate UI
+UI ->> Backend: PUT /api/adocoes/{id}/status
+activate Backend
+Backend ->> DB: UPDATE adocoes SET status = 'aprovado' OR 'reprovado'
+activate DB
+
+alt Adoção aprovada
+    DB -->> Backend: Confirmação
+    deactivate DB
+    Backend -->> UI: 200 OK - "Adoção aprovada com sucesso!"
+    deactivate Backend
+    UI -->> ONG: Exibe mensagem de sucesso
+    deactivate UI
+    Backend -->> User: Notificação - "Parabéns! Sua adoção foi aprovada 🎉🐾"
+else Adoção reprovada
+    DB -->> Backend: Confirmação
+    deactivate DB
+    Backend -->> UI: 200 OK - "Adoção reprovada."
+    deactivate Backend
+    UI -->> ONG: Exibe mensagem de reprovação
+    deactivate UI
+    Backend -->> User: Notificação - "Sua solicitação não pôde ser aprovada desta vez. Continue procurando outros animais 💙🐾"
+end
+@enduml
