@@ -1,0 +1,28 @@
+@startuml
+title Notificação para ONG - Novos Interessados em Animal
+
+actor ONG as "ONG"
+participant UI as "Interface UI"
+participant Backend as "Back End"
+database DB as "Banco de Dados"
+participant Email as "Serviço de E-mail/Push"
+
+' --- Fluxo principal ---
+Backend ->> DB: Verifica novos registros de interesse em animais
+activate DB
+DB -->> Backend: Lista de novos interessados por animal
+deactivate DB
+
+alt Novos interessados encontrados
+    Backend ->> Email: Enviar e-mail/Push "Novo interessado no animal [NomeAnimal] 🐾"
+    Email -->> ONG: Notificação recebida
+    Backend -->> UI: Atualiza área da ONG com a fila de interessados
+    UI -->> ONG: Exibe lista de interessados atualizada
+else Nenhum novo interessado
+    Backend -->> UI: Sem alterações na fila
+    UI -->> ONG: Exibe mensagem "Nenhum novo interessado no momento"
+else Falha no envio
+    Backend -->> UI: Log de erro - "Falha ao enviar notificação"
+    UI -->> Admin: Alerta sobre falha de notificação para ONG
+end
+@enduml
