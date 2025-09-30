@@ -1,0 +1,32 @@
+@startuml
+title ONG cria post de evento na página
+
+actor ONG as "ONG"
+participant UI as "Interface UI"
+participant Backend as "Back End"
+database DB as "Banco de Dados"
+
+ONG ->> UI: Acessa área de criação de eventos
+activate UI
+ONG ->> UI: Preenche dados do evento (título, data, local, descrição, imagem)
+UI ->> Backend: POST /api/eventos
+activate Backend
+Backend ->> DB: INSERT INTO eventos (...)
+activate DB
+
+alt Evento criado com sucesso
+    DB -->> Backend: Registro confirmado
+    deactivate DB
+    Backend -->> UI: 201 Created - "Evento publicado com sucesso!"
+    deactivate Backend
+    UI -->> ONG: Exibe mensagem e redireciona para página do evento
+    deactivate UI
+else Falha na criação
+    DB -->> Backend: Erro no registro
+    deactivate DB
+    Backend -->> UI: 500 Internal Server Error - "Erro ao publicar evento"
+    deactivate Backend
+    UI -->> ONG: Mensagem amigável "Não foi possível criar o evento. Tente novamente mais tarde."
+    deactivate UI
+end
+@enduml
