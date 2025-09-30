@@ -1,15 +1,32 @@
 @startuml
-title [RF011] - Busca e Filtros Avançados
+title Usuário busca animais com filtros
 
-actor Adotante as "Usuário Adotante"
+actor User as "Usuário Adotante"
 participant UI as "Interface UI"
 participant Backend as "Back End"
 database DB as "Banco de Dados"
 
-Adotante ->> UI: Define filtros
-UI ->> Backend: GET /api/animais?filtros
-Backend ->> DB: SELECT animais WHERE filtros
-DB -->> Backend: Lista animais
-Backend -->> UI: Resultados
-UI -->> Adotante: Exibe animais filtrados
+User ->> UI: Acessa tela de busca de animais
+activate UI
+User ->> UI: Define filtros (raça, sexo, porte, idade)
+UI ->> Backend: GET /api/animais?raça=...&sexo=...&porte=...&idade=...
+activate Backend
+Backend ->> DB: SELECT * FROM animais WHERE filtros aplicados
+activate DB
+
+alt Animais encontrados
+    DB -->> Backend: Lista de animais
+    deactivate DB
+    Backend -->> UI: 200 OK - Retorna resultados
+    deactivate Backend
+    UI -->> User: Exibe animais correspondentes aos filtros
+    deactivate UI
+else Nenhum animal encontrado
+    DB -->> Backend: Resultado vazio
+    deactivate DB
+    Backend -->> UI: 200 OK - Lista vazia
+    deactivate Backend
+    UI -->> User: Mensagem "Nenhum animal corresponde aos filtros escolhidos. Tente ajustar sua busca"
+    deactivate UI
+end
 @enduml
