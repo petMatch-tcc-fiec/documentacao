@@ -1,0 +1,31 @@
+@startuml
+title Upload de fotos do Adotante
+
+actor Adotante as "Usuário Adotante"
+participant UI as "Interface UI"
+participant Backend as "Back End"
+participant Storage as "Serviço de Armazenamento"
+
+Adotante ->> UI: Seleciona foto para upload
+activate UI
+UI ->> Backend: POST /api/adotantes/{id}/uploadFoto (arquivo)
+activate Backend
+Backend ->> Storage: Salva foto no repositório (S3, Cloud, File Server)
+activate Storage
+
+alt Upload bem-sucedido
+    Storage -->> Backend: Confirmação de armazenamento (URL da imagem)
+    deactivate Storage
+    Backend -->> UI: 200 OK - "Foto enviada com sucesso"
+    deactivate Backend
+    UI -->> Adotante: Exibe mensagem amigável e atualiza foto de perfil
+    deactivate UI
+else Falha no upload
+    Storage -->> Backend: Erro ao armazenar arquivo
+    deactivate Storage
+    Backend -->> UI: 500 Internal Server Error - "Erro ao enviar a foto"
+    deactivate Backend
+    UI -->> Adotante: Mensagem amigável "Não foi possível enviar a foto. Tente novamente."
+    deactivate UI
+end
+@enduml
