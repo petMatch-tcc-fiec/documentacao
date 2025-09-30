@@ -1,0 +1,37 @@
+@startuml
+title Geração de Relatório com Estatísticas do Sistema
+
+actor Admin as "Admin Global"
+participant UI as "Interface UI"
+participant Backend as "Back End"
+database DB as "Banco de Dados"
+participant Report as "Módulo de Relatórios"
+
+Admin ->> UI: Solicita geração de relatório (animais, eventos, etc.)
+activate UI
+UI ->> Backend: GET /api/relatorios?periodo=...
+activate Backend
+Backend ->> DB: SELECT COUNT(*) adotados, devolvidos, disponiveis, eventos ...
+activate DB
+DB -->> Backend: Retorna estatísticas consolidadas
+deactivate DB
+
+Backend ->> Report: Monta relatório (PDF/Excel/Visualização)
+activate Report
+
+alt Relatório gerado com sucesso
+    Report -->> Backend: Arquivo pronto
+    deactivate Report
+    Backend -->> UI: 200 OK - Relatório disponível para download
+    deactivate Backend
+    UI -->> Admin: Exibe link para visualizar/baixar relatório
+    deactivate UI
+else Erro na geração
+    Report -->> Backend: Falha na criação
+    deactivate Report
+    Backend -->> UI: 500 Internal Server Error - "Erro ao gerar relatório"
+    deactivate Backend
+    UI -->> Admin: Mensagem amigável "Não foi possível gerar o relatório. Tente novamente mais tarde."
+    deactivate UI
+end
+@enduml
