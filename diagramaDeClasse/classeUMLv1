@@ -1,0 +1,183 @@
+@startuml
+' ============================================================
+' Diagrama de Classes - PetMatch
+' Projeto de TCC - Sistema de Adoção de Animais
+' ============================================================
+
+' -----------------------------
+' CLASSES PRINCIPAIS
+' -----------------------------
+
+class Usuario{
+  -id: String
+  -name: String
+  -email: String
+  -password: String
+  -picture: String
+  -fcmToken: String
+  -state: ResgisterState
+  -accessLevel: UserLevel
+
+  +loadUserByUsername()
+  +findById()
+  +findByEmail()
+  +findaAll()
+  +update()
+  +saveAdmin()
+  +saveAdotnte()
+  +saveOng()
+  +deleteByID()
+  +createUsers()
+  +updateFcmToken()
+}
+
+class OngUsuario {
+  -idOng: String
+  -nomeFantasiaOng: String
+  -emailOng: String
+  -senhaOng: String
+  -telefoneOng: String
+  -enderecoOng: String
+  -celularOng: String
+  -cnpjOng: String
+}
+
+class AdotanteUsuario {
+  -idAdotante: String
+  -nomeAdotante: String
+  -cpfAdotante: String
+  -emailAdotante: String
+  -senhaAdotante: String
+  -celularAdotante: String
+  -enderecoAdotante: String
+  -descricaoOutrosAnimais: String
+  -preferencia: String
+}
+
+class Animal {
+  -id: String
+  -nome: String
+  -especie: String
+  -raca: String
+  -sexo: String
+  -idade: int
+  -porte: String
+  -cor: String
+  -descricao: String
+  -disponivel: boolean
+
+  +create(): void
+  +findaById(): void
+  +findAll(): List<Animal>
+  +findAllWithQueries(): List<Animal>
+  +update(): void
+  +deleteById(): void
+}
+
+class Adocao {
+  -idAdocao: String
+  -dataAdocao: Date
+  -status: String
+
+  +criarAdocao(): void
+  +atualizarAdocao(): void
+  +listarAdocoes(): List<Adocao>
+  +deletarAdocao(): void
+}
+
+class AdocaoInteresse {
+  -idInteresse: String
+  -dataInteresse: Date
+  -status: String
+
+  +registrarInteresse() void
+  +avaliarInteresse(): void
+  +listarInteressadosPorAnimal(): List<AdocaoInteresse>
+  +enviarEmailAprovação(): void
+  +enviarEmailAReprovação(): void
+}
+
+class Evento {
+  -id: String
+  -nome: String
+  -dataHora: LocalDateTime
+  -endereco: String
+
+  +criarEvento(): void
+  +listarTodosEventos(): List<Evento>
+  +buscarPorId(): void
+  +deletarPorId(): voida
+}
+
+' -----------------------------
+' CLASSES AUXILIARES
+' -----------------------------
+
+class FichaMedicaAnimal {
+  -idFichaMedica: String
+  -vacinas: String: String
+  -historicoSaude: String
+
+  +criarFicha(): void
+  +atualizarFicha(): void
+  +listarFichas(): List<FichaMedicaAnimal>
+  +deletarFicha(): void
+}
+
+class FotosAnimais {
+  -idFotoAnimal: String
+  -arquivoAniamal: String
+
+  +criarFotoAnimal(): void
+  +atualizarFotoAnimal(): void
+  +listarFotosAnimais(): List<FotosAnimais>
+  +deletarFotoAnimal(): void
+}
+
+class FotosAdotantes {
+  -idFotoAdotante: String
+  -arquivoAdotante: String
+
+  +criarFotoAdotante(): void
+  +atualizarFotoAdotante(): void
+  +listarFotosAdotantes(): List<FotosAdotantes>
+  +deletarFotoAdotante(): void
+}
+
+' -----------------------------
+' RELACIONAMENTOS
+' -----------------------------
+
+' Herança: AdotanteUsuario e OngUsuario implementam Usuario
+AdotanteUsuario -|> Usuario
+OngUsuario -|> Usuario
+
+' ONG pode cadastrar vários Animais e Eventos
+OngUsuario "1" --> "0..*" Animal
+OngUsuario "1" --> "0..*" Evento
+
+' Adotante pode ter várias Fotos, Interesses e Adoções
+AdotanteUsuario "1" --> "0..*" FotosAdotantes
+AdotanteUsuario "1" --> "0..*" AdocaoInteresse
+AdotanteUsuario "1" --> "0..*" Adocao
+
+' Animal tem relação com ONG, Ficha, Fotos, Interesses e Adoção
+Animal "1" --> "1" OngUsuario
+Animal "1" --> "1" FichaMedicaAnimal
+Animal "1" --> "0..*" FotosAnimais
+Animal "1" --> "0..*" AdocaoInteresse
+Animal "0..1" --> "1" Adocao
+
+' Ficha médica e fotos pertencem a um único animal
+FichaMedicaAnimal "1" --> "1" Animal
+FotosAnimais "1" --> "1" Animal
+
+' Fotos de adotante pertencem a um único adotante
+FotosAdotantes "1" --> "1" AdotanteUsuario
+
+' Adoção e Interesse ligam adotante e animal
+Adocao "1" --> "1" AdotanteUsuario
+Adocao "1" --> "1" Animal
+AdocaoInteresse "1" --> "1" AdotanteUsuario
+AdocaoInteresse "1" --> "1" Animal
+@enduml
