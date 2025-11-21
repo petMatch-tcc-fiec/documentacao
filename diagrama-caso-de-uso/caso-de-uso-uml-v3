@@ -1,0 +1,57 @@
+@startuml
+left to right direction
+actor "Usuário Adotante" as Adotante
+actor "Admin ONG" as ONG
+
+rectangle "PetMatch - Sistema de Adoção" {
+
+  (Cadastro de usuário adotante) as UC1
+  (Cadastro de usuário ONG) as UC2
+  
+  (Efetuar login adotante) as UC3
+  (Efetuar login ONG) as UC4
+
+  (Cadastro de animais para adoção) as UC5
+  (Upload de fotos dos animais) as UC17
+  (Excluir/Atualizar animais) as UC6
+
+  (Busca e filtros avançados) as UC7
+  (Manifestar interesse / Sistema de Match) as UC8
+  (Lista de espera de adotantes) as UC9
+  (Alterar status do animal para adotado) as UC10
+
+  (Postar evento) as UC11
+  (Excluir evento) as UC12
+
+  (Receber notificações - adotante) as UC13
+  (Receber notificações - ONG) as UC14
+
+  (Relatórios e estatísticas) as UC15
+
+  (Upload de fotos do perfil adotante) as UC16
+
+  (Adicionar ficha médica do animal) as UC18
+}
+
+' ---- Ações do Adotante ----
+Adotante --> UC1
+Adotante --> UC3
+Adotante --> UC7
+Adotante --> UC8
+Adotante --> UC13
+Adotante --> UC16
+
+' ---- Ações do Admin ONG ----
+ONG --> UC2
+ONG --> UC4
+ONG --> UC5
+ONG --> UC17
+ONG --> UC6
+ONG --> UC9
+ONG --> UC10
+ONG --> UC11
+ONG --> UC12
+ONG --> UC14
+ONG --> UC15
+ONG --> UC18
+@enduml
