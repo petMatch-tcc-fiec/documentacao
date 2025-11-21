@@ -1,0 +1,152 @@
+@startuml
+' ============================================================
+' Diagrama de Classes - PetMatch (Atualizado pelos Casos de Uso)
+' ============================================================
+
+' -----------------------------
+' CLASSES PRINCIPAIS
+' -----------------------------
+
+class Usuario {
+  -id: String
+  -nome: String
+  -email: String
+  -senha: String
+  -fotoPerfil: String
+  -fcmToken: String
+  -tipoUsuario: String  <<Adotante / ONG>>
+
+  +cadastrar(): void
+  +login(): boolean
+  +atualizarPerfil(): void
+  +atualizarFotoPerfil(): void
+}
+
+class AdotanteUsuario {
+  -cpf: String
+  -preferencias: String
+  -descricaoOutrosAnimais: String
+
+  +buscarAnimais(): List<Animal>
+  +filtrarAnimais(): List<Animal>
+  +manifestarInteresse(): void
+  +receberNotificacoes(): void
+}
+
+class OngUsuario {
+  -cnpj: String
+  -telefone: String
+  -endereco: String
+
+  +cadastrarAnimal(): void
+  +editarAnimal(): void
+  +excluirAnimal(): void
+  +postarEvento(): void
+  +excluirEvento(): void
+  +verListaEspera(): List<AdocaoInteresse>
+  +alterarStatusAnimal(): void
+  +gerarRelatorios(): Relatorio
+  +receberNotificacoes(): void
+}
+
+class Animal {
+  -id: String
+  -nome: String
+  -especie: String
+  -raca: String
+  -sexo: String
+  -idade: int
+  -porte: String
+  -descricao: String
+  -disponivel: boolean
+
+  +criar(): void
+  +editar(): void
+  +excluir(): void
+  +alterarStatus(): void
+}
+
+class AdocaoInteresse {
+  -idInteresse: String
+  -dataInteresse: Date
+  -status: String
+
+  +registrarInteresse(): void
+  +listarInteressadosPorAnimal(): List<AdocaoInteresse>
+}
+
+class Evento {
+  -id: String
+  -titulo: String
+  -data: Date
+  -endereco: String
+  -descricao: String
+
+  +criarEvento(): void
+  +excluirEvento(): void
+  +listarEventos(): List<Evento>
+}
+
+' -----------------------------
+' CLASSES AUXILIARES
+' -----------------------------
+
+class FotosAnimais {
+  -idFoto: String
+  -arquivo: String
+
+  +uploadFoto(): void
+  +editarFoto(): void
+  +excluirFoto(): void
+}
+
+class FotosAdotantes {
+  -idFoto: String
+  -arquivo: String
+
+  +uploadFoto(): void
+  +editarFoto(): void
+  +excluirFoto(): void
+}
+
+class FichaMedicaAnimal {
+  -idFicha: String
+  -vacinas: String
+  -historicoSaude: String
+
+  +criarFicha(): void
+  +atualizarFicha(): void
+  +listarFicha(): List<FichaMedicaAnimal>
+}
+
+class Notificacao {
+  -idNotificacao: String
+  -mensagem: String
+  -dataEnvio: Date
+  -tipo: String
+
+  +enviarParaAdotante(): void
+  +enviarParaOng(): void
+}
+
+
+' -----------------------------
+' RELACIONAMENTOS
+' -----------------------------
+
+AdotanteUsuario -|> Usuario
+OngUsuario -|> Usuario
+
+OngUsuario "1" --> "0..*" Animal
+Animal "1" --> "0..*" FotosAnimais
+Animal "1" --> "1" FichaMedicaAnimal
+
+AdotanteUsuario "1" --> "0..*" FotosAdotantes
+
+Animal "1" --> "0..*" AdocaoInteresse
+AdotanteUsuario "1" --> "0..*" AdocaoInteresse
+
+OngUsuario "1" --> "0..*" Evento
+
+Notificacao --> Usuario
+@enduml
