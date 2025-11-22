@@ -1,5 +1,5 @@
 @startuml
-title [RF010] - Editar/Excluir Animais
+title [RF010] - Excluir Animais
 
 actor ONG as "Admin ONG"
 participant UI as "Interface UI"
@@ -7,8 +7,8 @@ participant Backend as "Back End"
 database DB as "Banco de Dados"
 
 ONG ->> UI: Seleciona animal
-UI ->> Backend: PUT/DELETE /api/animais/{id}
-Backend ->> DB: UPDATE/DELETE animais
+UI ->> Backend: DELETE /api/animais/{id}
+Backend ->> DB: DELETE animais
 DB -->> Backend: Sucesso
 Backend -->> UI: Operação concluída
 UI -->> ONG: Confirmação
