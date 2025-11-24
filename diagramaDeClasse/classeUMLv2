@@ -1,152 +1,156 @@
 @startuml
 ' ============================================================
-' Diagrama de Classes - PetMatch (Atualizado pelos Casos de Uso)
+' Diagrama de Classes - PetMatch (Corrigido)
 ' ============================================================
 
 ' -----------------------------
 ' CLASSES PRINCIPAIS
 ' -----------------------------
 
-class Usuario {
-  -id: String
-  -nome: String
-  -email: String
-  -senha: String
-  -fotoPerfil: String
-  -fcmToken: String
-  -tipoUsuario: String  <<Adotante / ONG>>
-
-  +cadastrar(): void
-  +login(): boolean
-  +atualizarPerfil(): void
-  +atualizarFotoPerfil(): void
+abstract class Usuario {
+  - id: String
+  - name: String
+  - email: String
+  - password: String
+  - picture: String
+  - fcmToken: String
+  - registerState: String
+  - accessLevel: String
+  -- Métodos de Serviço (Exemplo) --
+  + loadUserByUsername(): UserDetails
+  + findByEmail(): Usuario
+  + updateFcmToken(): void
 }
 
-class AdotanteUsuario {
-  -cpf: String
-  -preferencias: String
-  -descricaoOutrosAnimais: String
-
-  +buscarAnimais(): List<Animal>
-  +filtrarAnimais(): List<Animal>
-  +manifestarInteresse(): void
-  +receberNotificacoes(): void
+class AdminUsuario extends Usuario {
+  + nomeAdmin: String
+  + cpfCnpjAdmin: String
+  -- Métodos de Serviço (Exemplo) --
+  + saveAdmin(): void
+  + createUsers(): void
 }
 
-class OngUsuario {
-  -cnpj: String
-  -telefone: String
-  -endereco: String
+class OngUsuario extends Usuario {
+  + nomeFantasiaOng: String
+  + telefoneOng: String
+  + enderecoOng: String
+  + celularOng: String
+  + cnpjOng: String
+  -- Métodos de Serviço (Exemplo) --
+  + saveOng(): void
+}
 
-  +cadastrarAnimal(): void
-  +editarAnimal(): void
-  +excluirAnimal(): void
-  +postarEvento(): void
-  +excluirEvento(): void
-  +verListaEspera(): List<AdocaoInteresse>
-  +alterarStatusAnimal(): void
-  +gerarRelatorios(): Relatorio
-  +receberNotificacoes(): void
+class AdotanteUsuario extends Usuario {
+  + nomeAdotante: String
+  + cpfAdotante: String
+  + enderecoAdotante: String
+  + celularAdotante: String
+  + descricaoOutrosAnimais: String
+  + preferencia: String
+  -- Métodos de Serviço (Exemplo) --
+  + saveAdotante(): void
 }
 
 class Animal {
-  -id: String
-  -nome: String
-  -especie: String
-  -raca: String
-  -sexo: String
-  -idade: int
-  -porte: String
-  -descricao: String
-  -disponivel: boolean
-
-  +criar(): void
-  +editar(): void
-  +excluir(): void
-  +alterarStatus(): void
+  - id: String
+  - nome: String
+  - especie: String
+  - raca: String
+  - sexo: String
+  - idade: int
+  - porte: String
+  - cor: String
+  - observacoes: String
+  - disponivel: boolean
+  -- Métodos de Serviço --
+  + create(): void
+  + findAll(query): List<Animal>
+  + update(): void
+  + deleteById(): void
 }
 
 class AdocaoInteresse {
-  -idInteresse: String
-  -dataInteresse: Date
-  -status: String
-
-  +registrarInteresse(): void
-  +listarInteressadosPorAnimal(): List<AdocaoInteresse>
+  - idInteresse: String
+  - dataInteresse: Date
+  - status: AdocaoStatus
+  -- Métodos de Serviço --
+  + registrarInteresse(): void
+  + avaliarInteresse(): void
+  + listarInteressados(animalId): List<AdocaoInteresse>
 }
 
 class Evento {
-  -id: String
-  -titulo: String
-  -data: Date
-  -endereco: String
-  -descricao: String
-
-  +criarEvento(): void
-  +excluirEvento(): void
-  +listarEventos(): List<Evento>
+  - id: String
+  - nome: String
+  - dataHora: LocalDateTime
+  - endereco: String
+  - descricao: String
+  -- Métodos de Serviço --
+  + criarEvento(): void
+  + listarTodosEventos(): List<Evento>
+  + deletarPorId(): void
 }
 
 ' -----------------------------
 ' CLASSES AUXILIARES
 ' -----------------------------
 
-class FotosAnimais {
-  -idFoto: String
-  -arquivo: String
+class FichaMedicaAnimal {
+  - idFichaMedica: String
+  - vacinas: String
+  - historicoSaude: String
+  -- Métodos de Serviço --
+  + criarFicha(): void
+  + atualizarFicha(): void
+}
 
-  +uploadFoto(): void
-  +editarFoto(): void
-  +excluirFoto(): void
+class FotosAnimais {
+  - idFotoAnimal: String
+  - arquivoAnimal: String
+  -- Métodos de Serviço --
+  + criarFoto(): void
+  + deletarFoto(): void
 }
 
 class FotosAdotantes {
-  -idFoto: String
-  -arquivo: String
-
-  +uploadFoto(): void
-  +editarFoto(): void
-  +excluirFoto(): void
+  - idFotoAdotante: String
+  - arquivoAdotante: String
+  -- Métodos de Serviço --
+  + criarFoto(): void
+  + deletarFoto(): void
 }
-
-class FichaMedicaAnimal {
-  -idFicha: String
-  -vacinas: String
-  -historicoSaude: String
-
-  +criarFicha(): void
-  +atualizarFicha(): void
-  +listarFicha(): List<FichaMedicaAnimal>
-}
-
-class Notificacao {
-  -idNotificacao: String
-  -mensagem: String
-  -dataEnvio: Date
-  -tipo: String
-
-  +enviarParaAdotante(): void
-  +enviarParaOng(): void
-}
-
 
 ' -----------------------------
-' RELACIONAMENTOS
+' RELACIONAMENTOS (Associações)
 ' -----------------------------
 
-AdotanteUsuario -|> Usuario
-OngUsuario -|> Usuario
+' Herança (Generalização): Subclasses especializam a Superclasse
+' O usuário base é abstrato, pois só existe como um dos tipos
+AdminUsuario -up-|> Usuario
+OngUsuario -up-|> Usuario
+AdotanteUsuario -up-|> Usuario
 
-OngUsuario "1" --> "0..*" Animal
-Animal "1" --> "0..*" FotosAnimais
-Animal "1" --> "1" FichaMedicaAnimal
+' 1. ONG (Cadastra) -> Animal (1 para Muitos)
+OngUsuario "1" -- "0..*" Animal : Cadastra
 
-AdotanteUsuario "1" --> "0..*" FotosAdotantes
+' 2. ONG (Promove) -> Evento (1 para Muitos)
+OngUsuario "1" -- "0..*" Evento : Promove
 
-Animal "1" --> "0..*" AdocaoInteresse
-AdotanteUsuario "1" --> "0..*" AdocaoInteresse
+' 3. Adotante (Possui) -> FotosAdotantes (1 para Muitos)
+AdotanteUsuario "1" -- "0..*" FotosAdotantes : Possui
 
-OngUsuario "1" --> "0..*" Evento
+' 4. Animal tem 1 Ficha e Muitas Fotos (Composição/Agregação Forte)
+Animal "1" *-- "1" FichaMedicaAnimal : Possui
+Animal "1" *-- "0..*" FotosAnimais : Possui
 
-Notificacao --> Usuario
+' 5. N:N (AdocaoInteresse é a Tabela/Classe Associativa)
+' O relacionamento N:N é modelado por duas associações 1:N com a classe de ligação
+AdotanteUsuario "1" -- "0..*" AdocaoInteresse : Interessa
+Animal "1" -- "0..*" AdocaoInteresse : ObjetoDeInteresse
+
+' 6. RELACIONAMENTO 1:1 ENTRE ANIMAL E ADOÇÃO (Se a adoção for o resultado final e Animal só pode ser adotado uma vez por Adocao)
+' OBS: A classe 'Adocao' do seu modelo físico está integrada na 'AdocaoInteresse'.
+' Se 'Adocao' for um estado final de 'AdocaoInteresse' (status APROVADO), a classe 'Adocao' pode ser eliminada.
+' Vou remover a classe Adocao para evitar redundância com AdocaoInteresse, mantendo a fidelidade ao seu modelo lógico/físico que só tem AdocaoInteresse.
+
 @enduml
